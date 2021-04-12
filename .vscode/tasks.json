@@ -1,0 +1,13 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "deploy-pi",
+            "type": "shell",
+            "command": "scp bin/flexavr.ino.hex pi@172.28.252.98:/home/pi/flexavr/",
+            "problemMatcher": []
+        }
+    ]
+}
