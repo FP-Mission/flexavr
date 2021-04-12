@@ -45,3 +45,4 @@ dkms.conf
 
 # CLion
 .idea/
+bin/
