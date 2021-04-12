@@ -1,3 +1,7 @@
 {
-    "board": "arduino:avr:nano"
+    "sketch": "flexavr.ino",
+    "configuration": "cpu=atmega328",
+    "board": "arduino:avr:nano",
+    "programmer": "arduino:avrisp",
+    "output": ".\\bin"
 }
