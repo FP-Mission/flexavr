@@ -8,6 +8,18 @@
             "type": "shell",
             "command": "scp bin/flexavr.ino.hex pi@172.28.252.98:/home/pi/flexavr/",
             "problemMatcher": []
-        }
+        },
+        {
+            "label": "program-avr",
+            "type": "shell",
+            "command": "scp bin/flexavr.ino.hex pi@172.28.252.98:/home/pi/flexavr/; ssh pi@172.28.252.98 \"./flexavr/a\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "debug-avr",
+            "type": "shell",
+            "command": "ssh pi@172.28.252.98 \"picocom -b 38400 /dev/ttyAMA0\"",
+            "problemMatcher": []
+        },
     ]
 }
