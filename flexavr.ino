@@ -19,7 +19,7 @@
   #define LORA_DIO0              5
   #define A0_MULTIPLIER      12.92
   #define WIREBUS                4
-  #define ENABLE_APRS            1
+  #define ENABLE_APRS            0
   #define APRS_ENABLE_PIN        9
   #define APRS_PTT               8
   #define APRS_DATA              3
