@@ -17,7 +17,7 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 
-#ifdef APRS_DATA
+#if ENABLE_APRS == 1
 
 #include <util/crc16.h>
 // #include <avr/pgmspace.h>
@@ -52,8 +52,8 @@ static const uint8_t PROGMEM _sine_table[] = {
 void SetupAPRS(void)
 {
   // Output pins
-  pinMode(APRS_ENABLE, OUTPUT);
-  digitalWrite(APRS_ENABLE, 0);     // Disable for now
+  pinMode(APRS_ENABLE_PIN, OUTPUT);
+  digitalWrite(APRS_ENABLE_PIN, 0);     // Disable for now
   delay(100);
   
   pinMode(APRS_PTT, OUTPUT);
@@ -61,7 +61,7 @@ void SetupAPRS(void)
   delay(100);
 
   // Now PTT is off, we can enable the device
-  digitalWrite(APRS_ENABLE, 1);
+  digitalWrite(APRS_ENABLE_PIN, 1);
   delay(500);
   
   pinMode(APRS_DATA, OUTPUT);

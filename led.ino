@@ -30,13 +30,16 @@ void CheckLEDs(void)
     }
     else if ((GPS.FixType == 3) && (GPS.Satellites >= 4))
     {
+      // Blink OK LED
       ControlLEDs(Flash, 0);
     }
     else
     {
+      // BLINK WARN LED
       ControlLEDs(0, Flash);
     }       
     
+    // Blink each 500ms
     NextLEDs = millis() + 500L;
     Flash = 1-Flash;
   }

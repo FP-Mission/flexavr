@@ -92,7 +92,7 @@ void Checkds18b20(void)
     else
     {
       sensors.requestTemperatures();          // Send the command to get temperature
-      CheckDS18B20s = millis() + 1000L;        // Leave 1 second (takes 782ms) for readings to happen
+      CheckDS18B20s = millis() + 1000L;       // Leave 1 second (takes 782ms) for readings to happen
     }
     GettingTemperature = !GettingTemperature;
   }

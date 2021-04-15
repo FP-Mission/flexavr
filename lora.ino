@@ -287,7 +287,7 @@ void unselect()
 int TimeToSend(void)
 {
   int CycleSeconds;
-	
+
   if (Settings.LoRaCycleTime == 0)
   {
     // Not using time to decide when we can send
@@ -297,7 +297,8 @@ int TimeToSend(void)
   if ((millis() > (LastLoRaTX + Settings.LoRaCycleTime*1000+2000)) && (TimeToSendIfNoGPS == 0))
   {
     // Timed out
-    // Serial.println("Using Timeout");
+    Serial.print("Using Timeout ");
+    Serial.println(Settings.LoRaCycleTime);
     return 1;
   }
   
@@ -314,14 +315,14 @@ int TimeToSend(void)
       
       if (CycleSeconds == Settings.LoRaSlot)
       {
-        // Serial.println("Using GPS Timing");
+        Serial.println("Using GPS Timing");
         return 1;
       }
     }
   }
   else if ((TimeToSendIfNoGPS > 0) && (millis() >= TimeToSendIfNoGPS))
   {
-    // Serial.println("Using LoRa Timing");
+    Serial.println("Using LoRa Timing");
     return 1;
   }
     
@@ -372,7 +373,7 @@ int LoRaIsFree(void)
 void SendLoRa(unsigned char *buffer, int Length)
 {
   int i;
-  
+
   LastLoRaTX = millis();
   TimeToSendIfNoGPS = 0;
 

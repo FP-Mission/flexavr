@@ -19,7 +19,8 @@
   #define LORA_DIO0              5
   #define A0_MULTIPLIER      12.92
   #define WIREBUS                4
-  #define APRS_ENABLE            9
+  #define ENABLE_APRS            1
+  #define APRS_ENABLE_PIN        9
   #define APRS_PTT               8
   #define APRS_DATA              3
   #define APRS_TX               A1   // 15
@@ -61,6 +62,7 @@ struct TSettings
   unsigned int  HighImageCount;
   unsigned int  High;
 
+#if ENABLE_APRS == 1
   // APRS
   double        APRS_Frequency;
   char          APRS_Callsign[7];               // Max 6 characters
@@ -71,6 +73,7 @@ struct TSettings
   char          APRS_PreEmphasis;
   char          APRS_Random;
   char          APRS_TelemInterval;
+#endif
 
   // DS18B20
   unsigned char DS18B20_Address[8];
@@ -105,8 +108,9 @@ unsigned long HostTimeout=0;
 unsigned char SSDVBuffer[256];
 unsigned int SSDVBufferLength=0;
 
+#if ENABLE_APRS == 1
 SoftwareSerial APRS_Serial(APRS_RX, APRS_TX);
-
+#endif
 //------------------------------------------------------------------------------------------------------
 
 void setup()
@@ -141,7 +145,9 @@ void setup()
 
   Setupds18b20();
 
+#if ENABLE_APRS == 1
   SetupAPRS();
+#endif
 }
 
 void SetDefaults(void)
@@ -165,6 +171,7 @@ void SetDefaults(void)
   Settings.HighImageCount = 8;
   Settings.High = 2000;
 
+#if ENABLE_APRS == 1
   // APRS Settings
   Settings.APRS_Frequency = 144.8;
   strcpy(Settings.APRS_Callsign, "");
@@ -175,7 +182,8 @@ void SetDefaults(void)
   Settings.APRS_PreEmphasis = 1;
   Settings.APRS_Random = 0; // 30;
   Settings.APRS_TelemInterval = 0;  // 2
-  
+#endif
+
   Serial.println(F("Placing default settings in EEPROM"));
   
   SaveSettings();
@@ -188,10 +196,13 @@ void loop()
   {
     if (CheckHost())
     {
+      // Until characters are received over serial
+      // Increment high priority timeout
       HostTimeout = millis() + 2000;
     }
     else if (millis() > HostTimeout)
     {
+      // Disable high priority after time out 
       HostPriority = 0;
     }
   }
@@ -209,7 +220,9 @@ void loop()
   
     Checkds18b20();
 
+#if ENABLE_APRS == 1
     CheckAPRS();
+#endif
   }
 }
 
@@ -326,10 +339,6 @@ void ProcessCommand(char *Line)
   {
     OK = ProcessLORACommand(Line+1);
   }
-  else if (Line[0] == 'A')
-  {
-    OK = ProcessAPRSCommand(Line+1);
-  }
   else if (Line[0] == 'S')
   {
     OK = ProcessSSDVCommand(Line+1);
@@ -338,6 +347,12 @@ void ProcessCommand(char *Line)
   {
     OK = ProcessFieldCommand(Line+1);
   }
+#if ENABLE_APRS == 1
+  else if (Line[0] == 'A')
+  {
+    OK = ProcessAPRSCommand(Line+1);
+  }
+#endif
 
   if (OK)
   {
@@ -525,6 +540,7 @@ int ProcessLORACommand(char *Line)
 }
 
     
+#if ENABLE_APRS == 1
 int ProcessAPRSCommand(char *Line)
 {
   int OK = 0;
@@ -600,7 +616,7 @@ int ProcessAPRSCommand(char *Line)
 
   return OK;
 }
-
+#endif
 
 int ProcessSSDVCommand(char *Line)
 {
