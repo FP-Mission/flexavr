@@ -153,7 +153,7 @@ void setup()
 
   Setupds18b20();
 
-#ifdef APRS_DATA
+#ifdef ENABLE_APRS
   SetupAPRS();
 #endif  
 }
@@ -232,7 +232,7 @@ void loop()
   
     Checkds18b20();
 
-#ifdef APRS_DATA
+#ifdef ENABLE_APRS
     CheckAPRS();
 #endif    
   }
