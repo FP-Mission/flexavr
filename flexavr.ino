@@ -11,19 +11,19 @@
 
 //------------------------------------------------------------------------------------------------------
 
-  #define LED_OK                 6
-  #define LED_WARN               7
-  #define LORA_NSS              10
-  #define LORA_DIO0              5
-  #define A0_MULTIPLIER      12.92
-  #define WIREBUS                4
-  #define ENABLE_APRS            0
-  #define APRS_ENABLE_PIN        9
-  #define APRS_PTT               8
-  #define APRS_DATA              3
-  #define APRS_TX               A1   // 15
-  #define APRS_RX               A2   // 16 
-  #define CUTDOWN               A3
+#define LED_OK                 6
+#define LED_WARN               7
+#define LORA_NSS              10
+#define LORA_DIO0              5
+#define A0_MULTIPLIER      12.92
+#define WIREBUS                4
+#define ENABLE_APRS            0
+#define APRS_ENABLE_PIN        9
+#define APRS_PTT               8
+#define APRS_DATA              3
+#define APRS_TX               A1   // 15
+#define APRS_RX               A2   // 16 
+#define CUTDOWN               A3
 
 //------------------------------------------------------------------------------------------------------
 
@@ -153,7 +153,7 @@ void setup()
 
   Setupds18b20();
 
-#ifdef ENABLE_APRS
+#if ENABLE_APRS == 1
   SetupAPRS();
 #endif  
 }
@@ -232,7 +232,7 @@ void loop()
   
     Checkds18b20();
 
-#ifdef ENABLE_APRS
+#if ENABLE_APRS == 1
     CheckAPRS();
 #endif    
   }

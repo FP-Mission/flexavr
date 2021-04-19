@@ -19,7 +19,6 @@
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\variants\\eightanaloginputs",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\EEPROM\\src",
-                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SoftwareSerial\\src",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\OneWire",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\DallasTemperature-3.9.0",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\I2C-Master-Library-master",
