@@ -27,7 +27,7 @@
 
 //------------------------------------------------------------------------------------------------------
 
-#define SENTENCE_LENGTH       120                  // This is more than sufficient for the standard sentence.  Extend if needed; shorten if you are tight on memory.
+#define SENTENCE_LENGTH       120    // This is more than sufficient for the standard sentence.  Extend if needed; shorten if you are tight on memory.
 #define PAYLOAD_LENGTH         16
 #define FIELDLIST_LENGTH       24
 #define COMMAND_BUFFER_LENGTH  70
@@ -557,85 +557,6 @@ int ProcessLORACommand(char *Line)
   return OK;
 }
 
-    
-#if ENABLE_APRS == 1
-int ProcessAPRSCommand(char *Line)
-{
-  int OK = 0;
-
-  if (Line[0] == 'P')
-  {
-    // Store payload ID
-    if (strlen(Line+1) <= 6)
-    {
-      strcpy(Settings.APRS_Callsign, Line+1);
-      OK = 1;
-    }
-  }
-  else if (Line[0] == 'F')
-  {
-    // New frequency
-    double Frequency;
-    
-    Frequency = atof(Line+1);
-    if ((Frequency >= 134) && (Frequency <= 174))
-    {
-      Settings.APRS_Frequency = Frequency;
-      // SetAPRSFrequency();
-      OK = 1;
-    }
-  }
-  else if (Line[0] == 'S')
-  {
-    // SSID
-    int SSID = atoi(Line+1);
-    
-    if ((SSID >= 0) && (SSID <= 14))
-    {
-      Settings.APRS_SSID = SSID;
-      OK = 1;
-    }
-  }
-  else if (Line[0] == 'A')
-  {
-    // Path altitude
-    Settings.APRS_PathAltitude = atoi(Line+1);
-
-    OK = 1;
-  }
-  else if (Line[0] == 'W')
-  {
-    // Use Wide2
-    Settings.APRS_HighUseWide2 = atoi(Line+1);
-    OK = 1;
-  }
-  else if (Line[0] == 'I')
-  {
-    // Tx Interval in seconds
-    Settings.APRS_TxInterval = atoi(Line+1);
-    OK = 1;
-  }
-  else if (Line[0] == 'R')
-  {
-    // Random period
-    Settings.APRS_Random = atoi(Line+1);
-    OK = 1;
-  }
-  else if (Line[0] == 'M')
-  {
-    Settings.APRS_PreEmphasis = atoi(Line+1);
-    OK = 1;
-  }
-  else if (Line[0] == 'T')
-  {
-    Settings.APRS_TelemInterval = atoi(Line+1);
-    OK = 1;
-  }
-
-  return OK;
-}
-#endif
-
 int ProcessSSDVCommand(char *Line)
 {
   int OK = 0;
@@ -740,26 +661,80 @@ int ProcessFieldCommand(char *Line)
   return OK;
 }
 
-unsigned char HexToByte(char ch)
+#if ENABLE_APRS == 1
+int ProcessAPRSCommand(char *Line)
 {
-    int num=0;
+  int OK = 0;
+
+  if (Line[0] == 'P')
+  {
+    // Store payload ID
+    if (strlen(Line+1) <= 6)
+    {
+      strcpy(Settings.APRS_Callsign, Line+1);
+      OK = 1;
+    }
+  }
+  else if (Line[0] == 'F')
+  {
+    // New frequency
+    double Frequency;
     
-    if (ch>='0' && ch<='9')
+    Frequency = atof(Line+1);
+    if ((Frequency >= 134) && (Frequency <= 174))
     {
-        num=ch-'0';
+      Settings.APRS_Frequency = Frequency;
+      // SetAPRSFrequency();
+      OK = 1;
     }
-    else if (ch>='A' && ch<='F')
-    {
-        num = ch + 10 - 'A';
-    }
-    else if (ch>='a' && ch<='f')
-    {
-        num = ch + 10 - 'a';
-    }
-    else
-    {
-      num=0;
-    }
+  }
+  else if (Line[0] == 'S')
+  {
+    // SSID
+    int SSID = atoi(Line+1);
     
-    return num;
+    if ((SSID >= 0) && (SSID <= 14))
+    {
+      Settings.APRS_SSID = SSID;
+      OK = 1;
+    }
+  }
+  else if (Line[0] == 'A')
+  {
+    // Path altitude
+    Settings.APRS_PathAltitude = atoi(Line+1);
+
+    OK = 1;
+  }
+  else if (Line[0] == 'W')
+  {
+    // Use Wide2
+    Settings.APRS_HighUseWide2 = atoi(Line+1);
+    OK = 1;
+  }
+  else if (Line[0] == 'I')
+  {
+    // Tx Interval in seconds
+    Settings.APRS_TxInterval = atoi(Line+1);
+    OK = 1;
+  }
+  else if (Line[0] == 'R')
+  {
+    // Random period
+    Settings.APRS_Random = atoi(Line+1);
+    OK = 1;
+  }
+  else if (Line[0] == 'M')
+  {
+    Settings.APRS_PreEmphasis = atoi(Line+1);
+    OK = 1;
+  }
+  else if (Line[0] == 'T')
+  {
+    Settings.APRS_TelemInterval = atoi(Line+1);
+    OK = 1;
+  }
+
+  return OK;
 }
+#endif

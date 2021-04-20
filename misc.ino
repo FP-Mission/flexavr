@@ -1,11 +1,33 @@
-char Hex(unsigned char Character)
-{
-  if (Character < 10)
-  {
-    return '0' + Character;
-  }
+// Convert representation of a hex character
+// to its byte value
+// '0' (48) -> 0
+// 'A' (65) -> 10
+// 'F' (70) -> 15
+// 'a' (97) -> 10
+// ...
+unsigned char HexToByte(char hex) { 
+    if (hex>='0' && hex<='9') {
+        return hex - '0';
+    } else if (hex>='A' && hex<='F') {
+        return hex + 10 - 'A';
+    } else if (hex>='a' && hex<='f') {
+        return hex + 10 - 'a';
+    }
+    return 0;
+}
 
-  return 'A' + Character - 10;
+// Convert a byte value to its hex character
+// 0 -> '0' (0)
+// 10 -> 'A' (65)
+// 15 -> 'F' (70)
+char ByteToHex(unsigned char byte) {
+  if (byte < 10) {
+    return '0' + byte;
+  } else if (byte < 16) {
+    return 'A' + byte - 10;
+  } else {
+    return 0;
+  }
 }
 
 int BuildSentence(char *TxLine)
@@ -136,10 +158,10 @@ int BuildSentence(char *TxLine)
    }
 
   TxLine[Count++] = '*';
-  TxLine[Count++] = Hex((CRC >> 12) & 15);
-  TxLine[Count++] = Hex((CRC >> 8) & 15);
-  TxLine[Count++] = Hex((CRC >> 4) & 15);
-  TxLine[Count++] = Hex(CRC & 15);
+  TxLine[Count++] = ByteToHex((CRC >> 12) & 15);
+  TxLine[Count++] = ByteToHex((CRC >> 8) & 15);
+  TxLine[Count++] = ByteToHex((CRC >> 4) & 15);
+  TxLine[Count++] = ByteToHex(CRC & 15);
 	TxLine[Count++] = '\n';  
 	TxLine[Count++] = '\0';
 	
