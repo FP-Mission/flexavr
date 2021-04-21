@@ -559,14 +559,14 @@ int ProcessLORACommand(char *Line)
   {
     int PacketLength = strlen(Line+1);
     if(PacketLength < PAYLOAD_LENGTH) {
-        // Downlink data
-        if (LoRaIsFree()) {
-            Serial.print(F("Send over LoRa:"));
-            Serial.println((char*)Line+1);
-            SendLoRa(Line+1, PacketLength); 
-        } else {
-            Serial.println("LoRa not ready");
-        }
+      // Downlink data
+      if (LoRaIsFree()) {
+        Serial.print(F("Send over LoRa:"));
+        Serial.println((char*)Line+1);
+        SendLoRa(Line+1, PacketLength); 
+      } else {
+        Serial.println("LoRa not ready");
+      }
     } else {
         Serial.println("Too long message");
     }
