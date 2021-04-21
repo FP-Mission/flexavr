@@ -220,17 +220,19 @@ void loop()
   {
     CheckHost();
 
-    CheckGPS();
+    //LoRaIsFree();
 
-    CheckLEDs();
+    //CheckGPS();
 
-    CheckCutdown();
+    //CheckLEDs();
 
-    CheckLoRa();
+    //CheckCutdown();
+
+    //CheckLoRa();
   
-    CheckADC();
+    //CheckADC();
   
-    Checkds18b20();
+    //Checkds18b20();
 
 #if ENABLE_APRS == 1
     CheckAPRS();
@@ -551,6 +553,23 @@ int ProcessLORACommand(char *Line)
   else if (Line[0] == 'U')
   {
     strncpy(Settings.UplinkCode, Line+1, sizeof(Settings.UplinkCode));
+    OK = 1;
+  }
+  else if (Line[0] == 'D')
+  {
+    int PacketLength = strlen(Line+1);
+    if(PacketLength < PAYLOAD_LENGTH) {
+        // Downlink data
+        if (LoRaIsFree()) {
+            Serial.print(F("Send over LoRa:"));
+            Serial.println((char*)Line+1);
+            SendLoRa(Line+1, PacketLength); 
+        } else {
+            Serial.println("LoRa not ready");
+        }
+    } else {
+        Serial.println("Too long message");
+    }
     OK = 1;
   }
 

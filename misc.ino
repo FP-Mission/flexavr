@@ -47,6 +47,7 @@ int BuildSentence(char *TxLine)
     Field = Settings.FieldList[i];
     *Temp = 0;
   
+    // Format value depending on field in a temp array
     if (Field == '0')
     {
       // PayloadID
@@ -134,6 +135,7 @@ int BuildSentence(char *TxLine)
       sprintf(Temp, "%u", GPS.ExtraFields[Field-'I']);
     }
 
+    // Add ',' divider and append temp array to TxLine
     if (i > 0)
     {
         strcat(TxLine, ",");

@@ -405,14 +405,15 @@ int TimeToSend(void)
   if (Settings.LoRaCycleTime == 0)
   {
     // Not using time to decide when we can send
+    Serial.println("Not using time");
     return 1;
   }
 
   if ((millis() > (LastLoRaTX + Settings.LoRaCycleTime*1000+2000)) && (TimeToSendIfNoGPS == 0))
   {
     // Timed out
-    //Serial.print("Using Timeout ");
-    //Serial.println(Settings.LoRaCycleTime);
+    Serial.print("Using Timeout ");
+    Serial.println(Settings.LoRaCycleTime);
     return 1;
   }
   
@@ -429,14 +430,14 @@ int TimeToSend(void)
       
       if (CycleSeconds == Settings.LoRaSlot)
       {
-        //Serial.println("Using GPS Timing");
+        Serial.println("Using GPS Timing");
         return 1;
       }
     }
   }
   else if ((TimeToSendIfNoGPS > 0) && (millis() >= TimeToSendIfNoGPS))
   {
-    //Serial.println("Using LoRa Timing");
+    Serial.println("Using LoRa Timing");
     return 1;
   }
     
@@ -456,6 +457,7 @@ int LoRaIsFree(void)
     if (LoRaMode == lmSending)
     {
       // Clear that IRQ flag
+      Serial.println("Clear IRQ");
       writeRegister( REG_IRQ_FLAGS, 0x08); 
       LoRaMode = lmIdle;
     }
@@ -467,8 +469,7 @@ int LoRaIsFree(void)
     if (TimeToSend())
     {
       // Either sending continuously, or it's our slot to send in
-      // Serial.println("TimeToSend");
-					
+				
       return 1;
     }
     
@@ -477,7 +478,8 @@ int LoRaIsFree(void)
       // TDM system and not time to send, so we can listen
       if (LoRaMode == lmIdle)
       {
-        startReceiving();
+        //startReceiving();
+        Serial.println("StartReceiving");
       }
     }
   }
@@ -604,7 +606,7 @@ void CheckLoRa(void)
 {
   static unsigned int ImageCount=0;
 
-  CheckLoRaRx();
+  //CheckLoRaRx();
   
   if (LoRaIsFree())
   {
