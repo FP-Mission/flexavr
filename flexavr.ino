@@ -555,15 +555,22 @@ int ProcessLORACommand(char *Line)
     strncpy(Settings.UplinkCode, Line+1, sizeof(Settings.UplinkCode));
     OK = 1;
   }
-  else if (Line[0] == 'D')
+  else if (Line[0] == 'M')
   {
+    // Send message
     int PacketLength = strlen(Line+1);
+
     if(PacketLength < PAYLOAD_LENGTH) {
-      // Downlink data
       if (LoRaIsFree()) {
+        unsigned char data[100];
+        *data = 0;
+        strcat(data, "$");
+        strcat(data, Line + 1);
+
         Serial.print(F("Send over LoRa:"));
-        Serial.println((char*)Line+1);
-        SendLoRa(Line+1, PacketLength); 
+        Serial.println((char*)data);
+
+        SendLoRa(data, PacketLength+1); 
       } else {
         Serial.println("LoRa not ready");
       }
@@ -571,6 +578,9 @@ int ProcessLORACommand(char *Line)
         Serial.println("Too long message");
     }
     OK = 1;
+  } else if (Line[0] = 'D') {
+      // Downlink binary data
+
   }
 
   return OK;
