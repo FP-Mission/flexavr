@@ -116,6 +116,7 @@ byte HostPriority=0;
 unsigned long HostTimeout=0;
 unsigned char SSDVBuffer[256];
 unsigned int SSDVBufferLength=0;
+unsigned char logPacketBuffer[256];
 
 //------------------------------------------------------------------------------------------------------
 
@@ -202,6 +203,14 @@ void SetDefaults(void)
 
 void loop()
 {  
+  /*/ 
+  int temp=0;
+  while(1) {
+    Serial.print("Super bien je m'appelle Patrick");
+    Serial.println(++temp);
+    delay(2000);
+  }
+  //*/
   if (HostPriority)
   {
     if (CheckHost())
@@ -219,8 +228,6 @@ void loop()
   else
   {
     CheckHost();
-
-    //LoRaIsFree();
 
     //CheckGPS();
 
@@ -579,8 +586,17 @@ int ProcessLORACommand(char *Line)
     }
     OK = 1;
   } else if (Line[0] = 'D') {
-      // Downlink binary data
-
+    // Test with PingReceived logPacket (size = 26)
+    int i;
+    int packetSize = 26;
+    for (i=0; i<packetSize; i++)
+    {
+      logPacketBuffer[i] = *(++Line);
+      Serial.print(logPacketBuffer[i]);
+    }
+    Serial.println(" SEND");
+    SendLoRa(logPacketBuffer, packetSize); 
+    OK = 1;
   }
 
   return OK;
