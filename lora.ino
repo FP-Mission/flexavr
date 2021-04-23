@@ -405,14 +405,14 @@ int TimeToSend(void)
   if (Settings.LoRaCycleTime == 0)
   {
     // Not using time to decide when we can send
-    Serial.println("Not using time");
+    //Serial.println("Not using time");
     return 1;
   }
 
   if ((millis() > (LastLoRaTX + Settings.LoRaCycleTime*1000+2000)) && (TimeToSendIfNoGPS == 0))
   {
     // Timed out
-    Serial.print("Using Timeout ");
+    //Serial.print("Using Timeout ");
     Serial.println(Settings.LoRaCycleTime);
     return 1;
   }
@@ -430,14 +430,14 @@ int TimeToSend(void)
       
       if (CycleSeconds == Settings.LoRaSlot)
       {
-        Serial.println("Using GPS Timing");
+        //Serial.println("Using GPS Timing");
         return 1;
       }
     }
   }
   else if ((TimeToSendIfNoGPS > 0) && (millis() >= TimeToSendIfNoGPS))
   {
-    Serial.println("Using LoRa Timing");
+    //Serial.println("Using LoRa Timing");
     return 1;
   }
     
@@ -457,7 +457,7 @@ int LoRaIsFree(void)
     if (LoRaMode == lmSending)
     {
       // Clear that IRQ flag
-      Serial.println("Clear IRQ");
+      // Serial.println("Clear IRQ");
       writeRegister( REG_IRQ_FLAGS, 0x08); 
       LoRaMode = lmIdle;
     }

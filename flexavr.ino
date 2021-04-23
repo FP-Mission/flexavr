@@ -377,10 +377,14 @@ void ProcessCommand(char *Line)
 
   if (OK)
   {
+    Serial.print(Line[0]);
+    Serial.print(Line[1]);
     Serial.println("*");
   }
   else
   {
+    Serial.print(Line[0]);
+    Serial.print(Line[1]);
     Serial.println("?");
   }
 }
@@ -592,9 +596,10 @@ int ProcessLORACommand(char *Line)
     for (i=0; i<packetSize; i++)
     {
       logPacketBuffer[i] = *(++Line);
-      Serial.print(logPacketBuffer[i]);
+      //Serial.print(logPacketBuffer[i]);
     }
-    Serial.println(" SEND");
+    Serial.print(packetSize);
+    Serial.println(" send");
     SendLoRa(logPacketBuffer, packetSize); 
     OK = 1;
   }
