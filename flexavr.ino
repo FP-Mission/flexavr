@@ -116,7 +116,6 @@ byte HostPriority=0;
 unsigned long HostTimeout=0;
 unsigned char SSDVBuffer[256];
 unsigned int SSDVBufferLength=0;
-unsigned char logPacketBuffer[256];
 
 //------------------------------------------------------------------------------------------------------
 
@@ -591,16 +590,19 @@ int ProcessLORACommand(char *Line)
     OK = 1;
   } else if (Line[0] = 'D') {
     // Test with PingReceived logPacket (size = 26)
+    unsigned char payloadBuffer[256];
+    int payloadSize = Line[1];
+
     int i;
-    int packetSize = 26;
-    for (i=0; i<packetSize; i++)
+    for (i=0; i<payloadSize; i++)
     {
-      logPacketBuffer[i] = *(++Line);
+      payloadBuffer[i] = *(++Line);
       //Serial.print(logPacketBuffer[i]);
     }
-    Serial.print(packetSize);
+    Serial.print(payloadSize);
     Serial.println(" send");
-    SendLoRa(logPacketBuffer, packetSize); 
+    SendLoRa(payloadBuffer, payloadSize); 
+
     OK = 1;
   }
 
@@ -627,10 +629,12 @@ int ProcessSSDVCommand(char *Line)
     {
       if (Upper)
       {
+        // Get MSB
         Value = HexToByte(*Line) << 4;
       }
       else
       {
+        // Get LSB
         Value += HexToByte(*Line);
         SSDVBuffer[SSDVBufferLength++] = Value;
       }
