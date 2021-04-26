@@ -27,8 +27,8 @@
 
 //------------------------------------------------------------------------------------------------------
 
-#define SENTENCE_LENGTH       120    // This is more than sufficient for the standard sentence.  Extend if needed; shorten if you are tight on memory.
-#define PAYLOAD_LENGTH         16
+#define SENTENCE_LENGTH        120    // This is more than sufficient for the standard sentence.  Extend if needed; shorten if you are tight on memory.
+#define PAYLOAD_ID_LENGTH      16
 #define FIELDLIST_LENGTH       24
 #define COMMAND_BUFFER_LENGTH  70
 
@@ -39,7 +39,7 @@
 struct TSettings
 {
   // Common
-  char PayloadID[PAYLOAD_LENGTH];
+  char PayloadID[PAYLOAD_ID_LENGTH];
   char FieldList[FIELDLIST_LENGTH];
 
   // GPS
@@ -202,14 +202,6 @@ void SetDefaults(void)
 
 void loop()
 {  
-  /*/ 
-  int temp=0;
-  while(1) {
-    Serial.print("Super bien je m'appelle Patrick");
-    Serial.println(++temp);
-    delay(2000);
-  }
-  //*/
   if (HostPriority)
   {
     if (CheckHost())
@@ -428,7 +420,7 @@ int ProcessCommonCommand(char *Line)
   else if (Line[0] == 'P')
   {
     // Store payload ID
-    if (strlen(Line+1) < PAYLOAD_LENGTH)
+    if (strlen(Line+1) < PAYLOAD_ID_LENGTH)
     {
       strcpy(Settings.PayloadID, Line+1);
       OK = 1;
@@ -570,7 +562,7 @@ int ProcessLORACommand(char *Line)
     // Send message
     int PacketLength = strlen(Line+1);
 
-    if(PacketLength < PAYLOAD_LENGTH) {
+    if(PacketLength < 80) {
       if (LoRaIsFree()) {
         unsigned char data[100];
         *data = 0;
@@ -581,29 +573,35 @@ int ProcessLORACommand(char *Line)
         Serial.println((char*)data);
 
         SendLoRa(data, PacketLength+1); 
+        OK = 1;
       } else {
         Serial.println("LoRa not ready");
       }
     } else {
         Serial.println("Too long message");
     }
-    OK = 1;
-  } else if (Line[0] = 'D') {
+  } else if (Line[0] == 'D') {
     // Test with PingReceived logPacket (size = 26)
     unsigned char payloadBuffer[256];
     int payloadSize = Line[1];
 
-    int i;
-    for (i=0; i<payloadSize; i++)
-    {
-      payloadBuffer[i] = *(++Line);
-      //Serial.print(logPacketBuffer[i]);
+    if(payloadSize < 250) {
+      if (LoRaIsFree()) {
+        int i;
+        for (i=0; i<payloadSize; i++) {
+          payloadBuffer[i] = Line[2 + i];
+          //Serial.print(logPacketBuffer[i]);
+        }
+        Serial.print(payloadSize);
+        Serial.println(" send");
+        SendLoRa(payloadBuffer, payloadSize); 
+        OK = 1;
+      } else {
+        Serial.println("LoRa not ready");
+      }
+    } else {
+        Serial.println("Too long payload");
     }
-    Serial.print(payloadSize);
-    Serial.println(" send");
-    SendLoRa(payloadBuffer, payloadSize); 
-
-    OK = 1;
   }
 
   return OK;
