@@ -457,7 +457,7 @@ int LoRaIsFree(void)
     if (LoRaMode == lmSending)
     {
       // Clear that IRQ flag
-      // Serial.println("Clear IRQ");
+      Serial.println("LoRaIsFree=1");
       writeRegister( REG_IRQ_FLAGS, 0x08); 
       LoRaMode = lmIdle;
     }

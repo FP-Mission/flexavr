@@ -220,6 +220,8 @@ void loop()
   {
     CheckHost();
 
+    LoRaIsFree();
+
     //CheckGPS();
 
     //CheckLEDs();
@@ -581,7 +583,7 @@ int ProcessLORACommand(char *Line)
         Serial.println("Too long message");
     }
   } else if (Line[0] == 'D') {
-    // Test with PingReceived logPacket (size = 26)
+    // Test with PingReceived logPacket (size = 29)
     unsigned char payloadBuffer[256];
     int payloadSize = Line[1];
 
