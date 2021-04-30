@@ -577,13 +577,12 @@ int ProcessLORACommand(char *Line)
         SendLoRa(data, PacketLength+1); 
         OK = 1;
       } else {
-        Serial.println("LoRa not ready");
+        Serial.println("LoRaIsFree=0");
       }
     } else {
-        Serial.println("Too long message");
+        Serial.println("TOO_LONG");
     }
   } else if (Line[0] == 'D') {
-    // Test with PingReceived logPacket (size = 29)
     unsigned char payloadBuffer[256];
     int payloadSize = Line[1];
 
@@ -599,10 +598,10 @@ int ProcessLORACommand(char *Line)
         SendLoRa(payloadBuffer, payloadSize); 
         OK = 1;
       } else {
-        Serial.println("LoRa not ready");
+        Serial.println("LoRaIsFree=0");
       }
     } else {
-        Serial.println("Too long payload");
+        Serial.println("TOO_LONG");
     }
   }
 
