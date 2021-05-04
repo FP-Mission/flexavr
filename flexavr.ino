@@ -299,8 +299,14 @@ int CheckHost(void)
 
     if (BinaryMode)
     {
+      // Save data in buffer
       Line[Length++] = Character;
-      if (--BinaryMode == 0)
+      // Replace 0xFF value that enables binary mode with
+      // actual frame length (~LD<length [byte]><data>)
+      if(Length == 4) {
+        BinaryMode = Character; 
+      }
+      if (BinaryMode-- == 0)
       {
         ProcessCommand(Line+1);
         Length = 0;
@@ -323,12 +329,16 @@ int CheckHost(void)
     }
     else if (Length > 0)
     {
+      // Append read character to line
       Line[Length++] = Character;
+      // If thrid character is being read (~LD)
       if (Length == 3)
       {
-        if ((Line[1] == 'S') && (Line[2] == 'B'))
+        // And command is LoRa binary downlink
+        if ((Line[1] == 'L') && (Line[2] == 'D'))
         {
-          BinaryMode = 32;
+          // Enable binaryMode mode
+          BinaryMode = 0xFF; // Enable binary mode 
         }
       }
     }
@@ -564,14 +574,14 @@ int ProcessLORACommand(char *Line)
     // Send message
     int PacketLength = strlen(Line+1);
 
-    if(PacketLength < 80) {
+    if(PacketLength < COMMAND_BUFFER_LENGTH - 3) {  // Remove header ~LM <message>
       if (LoRaIsFree()) {
         unsigned char data[100];
         *data = 0;
         strcat(data, "$");
         strcat(data, Line + 1);
 
-        Serial.print(F("Send over LoRa:"));
+        Serial.print(F("MessageDownlinked="));
         Serial.println((char*)data);
 
         SendLoRa(data, PacketLength+1); 
@@ -586,13 +596,14 @@ int ProcessLORACommand(char *Line)
     unsigned char payloadBuffer[256];
     int payloadSize = Line[1];
 
-    if(payloadSize < 250) {
+    if(payloadSize < COMMAND_BUFFER_LENGTH - 4) { // Remove command header ~LD<size> <data>
       if (LoRaIsFree()) {
         int i;
         for (i=0; i<payloadSize; i++) {
           payloadBuffer[i] = Line[2 + i];
-          //Serial.print(logPacketBuffer[i]);
+          //Serial.print(payloadBuffer[i]);
         }
+
         Serial.print("DataDownlinked=");
         Serial.println(payloadSize);
         SendLoRa(payloadBuffer, payloadSize);
@@ -644,7 +655,8 @@ int ProcessSSDVCommand(char *Line)
   }
   else if (Line[0] == 'B')
   {
-    // Binary SSDV Packet
+    Serial.println("LB is a deprecated command");
+    /*/ Binary SSDV Packet
     int i;
 
     for (i=0; i<32; i++)
@@ -654,6 +666,7 @@ int ProcessSSDVCommand(char *Line)
     OK = 1;
     Serial.print(F("SSDV="));
     Serial.println(SSDVBufferLength);
+    //*/
   }
   else if (Line[0] == 'S')
   {
