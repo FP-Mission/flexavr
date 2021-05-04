@@ -222,17 +222,17 @@ void loop()
 
     LoRaIsFree();
 
-    //CheckGPS();
+    CheckGPS();
 
-    //CheckLEDs();
+    CheckLEDs();
 
     //CheckCutdown();
 
     //CheckLoRa();
   
-    //CheckADC();
+    CheckADC();
   
-    //Checkds18b20();
+    Checkds18b20();
 
 #if ENABLE_APRS == 1
     CheckAPRS();
@@ -370,15 +370,15 @@ void ProcessCommand(char *Line)
 
   if (OK)
   {
+    Serial.print("*");
     Serial.print(Line[0]);
-    Serial.print(Line[1]);
-    Serial.println("*");
+    Serial.println(Line[1]);
   }
   else
   {
+    Serial.print("?");
     Serial.print(Line[0]);
-    Serial.print(Line[1]);
-    Serial.println("?");
+    Serial.println(Line[1]);
   }
 }
 
@@ -593,13 +593,12 @@ int ProcessLORACommand(char *Line)
           payloadBuffer[i] = Line[2 + i];
           //Serial.print(logPacketBuffer[i]);
         }
-        Serial.print(payloadSize);
-        Serial.println(" send");
-        SendLoRa(payloadBuffer, payloadSize); 
+        Serial.print("DataDownlinked=");
+        Serial.println(payloadSize);
+        SendLoRa(payloadBuffer, payloadSize);
         OK = 1;
-      } else {
-        Serial.println("LoRaIsFree=0");
       }
+      Serial.println("LoRaIsFree=0");
     } else {
         Serial.println("TOO_LONG");
     }
