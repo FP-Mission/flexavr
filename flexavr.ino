@@ -373,6 +373,11 @@ void ProcessCommand(char *Line)
   {
     OK = ProcessFieldCommand(Line+1);
   }
+  else if (Line[0] == 'A' && Line[1] == 'T') 
+  {
+    ProcessRockBlockCommand(Line);
+    return;
+  }
 #if ENABLE_APRS == 1
   else if (Line[0] == 'A')
   {
@@ -726,6 +731,60 @@ int ProcessFieldCommand(char *Line)
   }
  
   return OK;
+}
+
+void ProcessRockBlockCommand(char *Line)
+{
+  int OK = 0;
+
+  if (Line[0] == 'A' && Line[1] == 'T' && Line[2] == '\0')
+  {
+    Serial.println("AT");
+    OK = 1;
+  } else if(detectCommand("AT+CSQ", Line)) {
+    Serial.println("+CSQ:6"); 
+    OK = 1;
+  } else if(detectCommand("AT+SBDMTA?", Line)) {
+    Serial.println("+SBDMTA:1"); 
+    OK = 1;
+  } else if(detectCommand("AT+SBDRT", Line)) {
+    Serial.println("+SBDRT:"); 
+    Serial.println("Hello world !"); 
+    OK = 1;
+  } else if(detectCommand("AT+SBDRB", Line)) {
+    Serial.println("+SBDRB:"); 
+    // data size - 2 bytes
+    uint16_t dataSize = 14;
+    Serial.write(dataSize >> 8);
+    Serial.write(dataSize & 0x00FF);
+    // data 
+    // NOOP dead'beef'0000'0002'0003'cafe'cafe
+    Serial.write(0xDE);
+    Serial.write(0xAD);
+    Serial.write(0xBE);
+    Serial.write(0xEF);
+    Serial.write(0x00);
+    Serial.write(0x00);
+    Serial.write(0x00);
+    Serial.write(0x02);
+    Serial.write(0x00);
+    Serial.write(0x03);
+    Serial.write(0xCA);
+    Serial.write(0xFE);
+    Serial.write(0xCA);
+    Serial.write(0xFE);
+    // Checksum - 2 bytes
+    Serial.write(0x56);
+    Serial.write(0x78);
+    //*/
+    OK = 1;
+  }
+
+  if(OK) {
+    Serial.println("OK");
+  } else {
+    Serial.println("ERROR");
+  }
 }
 
 #if ENABLE_APRS == 1

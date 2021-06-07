@@ -30,6 +30,14 @@ char ByteToHex(unsigned char byte) {
   }
 }
 
+boolean detectCommand(const char* command, const char* line) {
+    bool found = true;
+    for (int i = 0; i < strlen(command); i++) {
+        found &= (command[i] == line[i]);
+    }
+    return found;
+}
+
 int BuildSentence(char *TxLine)
 {
   static unsigned int Counter=0;
