@@ -306,7 +306,9 @@ int CheckHost(void)
       if(Length == 4) {
         BinaryMode = Character; 
       }
-      if (BinaryMode-- == 0)
+      if (BinaryMode-- == 0) 
+      // never triggered ! incorrect implementation for binaryMode
+      // ~LD command requires a '\r' termination to work correctly
       {
         ProcessCommand(Line+1);
         Length = 0;
