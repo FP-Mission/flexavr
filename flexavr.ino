@@ -751,8 +751,42 @@ void ProcessRockBlockCommand(char *Line)
     Serial.println("+SBDRT:"); 
     Serial.println("Hello world !"); 
     OK = 1;
+  } else if(detectCommand("AT+SBDIX", Line)) {
+    struct SBDIX_t {
+        int moStatus;
+        int moMsn;
+        int mtStatus;
+        int mtMsn;
+        int mtLength;
+        int mtQueued;
+    } SBDIX;
+    // SBDIX result
+    SBDIX.moStatus = 0; 
+    SBDIX.moMsn = 15;
+    SBDIX.mtStatus = 1;
+    SBDIX.mtMsn = 28;
+    SBDIX.mtLength = 14;
+    SBDIX.mtQueued = 0;
+
+    // Send data
+    Serial.print("+SBDIX: "); 
+    Serial.print(SBDIX.moStatus);
+    Serial.print(", "); 
+    Serial.print(SBDIX.moMsn);
+    Serial.print(", "); 
+    Serial.print(SBDIX.mtStatus);
+    Serial.print(", "); 
+    Serial.print(SBDIX.mtMsn);
+    Serial.print(", "); 
+    Serial.print(SBDIX.mtLength);
+    Serial.print(", "); 
+    Serial.println(SBDIX.mtQueued);
+
+    OK = 1;
+    //*/
   } else if(detectCommand("AT+SBDRB", Line)) {
-    Serial.println("+SBDRB:"); 
+    Serial.print("AT+SBDRB:"); 
+    Serial.print('\r');
     // data size - 2 bytes
     uint16_t dataSize = 14;
     Serial.write(dataSize >> 8);
@@ -774,9 +808,11 @@ void ProcessRockBlockCommand(char *Line)
     Serial.write(0xCA);
     Serial.write(0xFE);
     // Checksum - 2 bytes
-    Serial.write(0x56);
-    Serial.write(0x78);
-    //*/
+    // least significant 2-bytes of the summation of the entire SBD message
+    // MSB sent first
+    Serial.write(0x06);
+    Serial.write(0xCD);
+
     OK = 1;
   }
 
