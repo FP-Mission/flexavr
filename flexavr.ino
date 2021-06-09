@@ -30,7 +30,7 @@
 #define SENTENCE_LENGTH        120    // This is more than sufficient for the standard sentence.  Extend if needed; shorten if you are tight on memory.
 #define PAYLOAD_ID_LENGTH      16
 #define FIELDLIST_LENGTH       24
-#define COMMAND_BUFFER_LENGTH  70
+#define COMMAND_BUFFER_LENGTH  100
 
 //------------------------------------------------------------------------------------------------------
 //
